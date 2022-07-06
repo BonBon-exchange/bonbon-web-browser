@@ -13,6 +13,8 @@ import { machineIdSync } from 'node-machine-id';
 
 import './appEvents';
 
+import './update';
+
 const machineId = machineIdSync();
 const appVersion = app.getVersion();
 

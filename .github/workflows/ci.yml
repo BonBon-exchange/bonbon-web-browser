@@ -48,7 +48,7 @@ jobs:
         with:
           name: BonBon-linux
           path: |
-            release/build/*-latest.yml
+            release/build/linux-latest.yml
             release/build/BonBon-*.*.*.AppImage
       - if: matrix.os == 'macos-latest'
         name: MacOS release
@@ -56,7 +56,7 @@ jobs:
         with:
           name: BonBon-macos
           path: |
-            release/build/*-latest.yml
+            release/build/macos-latest.yml
             release/build/BonBon-*.*.*-arm64.dmg
             release/build/BonBon-*.*.*.dmg
       - if: matrix.os == 'windows-latest'
@@ -65,5 +65,5 @@ jobs:
         with:
           name: Windows exe
           path: |
-            release/build/*-latest.yml
+            release/build/windows-latest.yml
             release/build/BonBon Setup *.*.*.exe
