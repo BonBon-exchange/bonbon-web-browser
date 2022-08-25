@@ -10,8 +10,8 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { useBoard } from 'renderer/App/hooks/useBoard';
-import icon from 'renderer/App/components/LeftBar/icon.png';
-import loadingImg from 'renderer/App/svg/loading.svg';
+import icon from 'renderer/App/images/icon.png';
+import loadingImg from 'renderer/App/images/loading.svg';
 
 import { MiniWindow, MiniView, MinimapProps } from './Types';
 

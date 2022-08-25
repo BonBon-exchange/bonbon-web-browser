@@ -30,6 +30,7 @@ export const mockWindow = () => {
         certificateErrorAnswer: jest.fn(),
         requestCapture: jest.fn(() => Promise.resolve()),
         getUrlToOpen: jest.fn(() => Promise.resolve()),
+        permissionResponse: jest.fn(),
       },
       config: {
         get: (key: string) => {
@@ -81,6 +82,7 @@ export const mockWindow = () => {
         showDownloadsPreview: jest.fn(),
         distributeWindowsEvenly: jest.fn(),
         setDefaultWindowSize: jest.fn(),
+        permissionRequest: jest.fn(),
       },
       off: {
         newWindow: jest.fn(),
@@ -96,6 +98,7 @@ export const mockWindow = () => {
         showDownloadsPreview: jest.fn(),
         distributeWindowsEvenly: jest.fn(),
         setDefaultWindowSize: jest.fn(),
+        permissionRequest: jest.fn(),
       },
       tools: {
         inspectElement: jest.fn(),
@@ -125,5 +128,6 @@ export const mockWindow = () => {
   });
 
   window.HTMLElement.prototype.scrollIntoView = jest.fn();
+  window.HTMLElement.prototype.scrollBy = jest.fn();
   window.scrollBy = jest.fn();
 };

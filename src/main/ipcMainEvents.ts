@@ -28,6 +28,7 @@ import {
   IpcAnalyticsPage,
   IpcCertificateErrorAnswer,
   IpcInspectElement,
+  IpcPermissionResponse,
   IpcRenameTab,
   IpcSaveTab,
   IpcSetStoreValue,
@@ -91,10 +92,33 @@ const browsers: Record<string, WebContents> = {};
 const certificateErrorAuth: { webContentsId: number; fingerprint: string }[] =
   [];
 
+const permissionsCallback: {
+  url: string;
+  permission: string;
+  callback: (response: boolean) => void;
+}[] = [];
+
 export const getBrowsers = () => browsers;
 export const getViews = () => views;
 export const setViews = (newViews: Record<string, BrowserView>) => {
   views = newViews;
+};
+export const addPermissionCallback = (
+  url: string,
+  permission: string,
+  callback: (response: boolean) => void
+) => {
+  const index = permissionsCallback.findIndex(
+    (p) => p?.url === url && p?.permission === permission
+  );
+  if (index > -1) delete permissionsCallback[index];
+  permissionsCallback.push({ url, permission, callback });
+};
+
+export const getPermissionCallback = (url: string, permission: string) => {
+  return permissionsCallback.find(
+    (p) => p?.url === url && p?.permission === permission
+  )?.callback;
 };
 
 export const getCertificateErrorAuth = (
@@ -451,5 +475,10 @@ export const makeIpcMainEvents = (): void => {
 
   ipcMain.handle('is-app-maximized', () => {
     return getMainWindow()?.isMaximized() || false;
+  });
+
+  ipcMain.on('permission-response', (_e, args: IpcPermissionResponse) => {
+    const callback = getPermissionCallback(args.url, args.permission);
+    if (callback) callback(args.response);
   });
 };

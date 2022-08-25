@@ -9,4 +9,5 @@ body.light-theme {
   --color-border: #8d8686;
   --color-background-4: #070708;
   --color-background-5: rgba(0, 0, 0, 0.1);
+  --color-red-close: rgba(255, 0, 0, 0.5);
 }

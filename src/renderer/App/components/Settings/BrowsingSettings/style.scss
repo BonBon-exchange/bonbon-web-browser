@@ -6,6 +6,15 @@
   width: 50px;
 }
 
+#browsing-settings-custom-search-engine {
+  flex-grow: 1;
+}
+
+.Settings_item-additional-row {
+  margin-top: 15px;
+  display: flex;
+}
+
 .Settings__item-title {
   font-weight: bold;
   margin-bottom: 10px;

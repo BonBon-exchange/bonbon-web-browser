@@ -10,7 +10,7 @@ import React from 'react';
 
 import { Unmaximize } from 'renderer/App/components/Unmaximize';
 
-import loadingImg from 'renderer/App/svg/loading.svg';
+import loadingImg from 'renderer/App/images/loading.svg';
 
 import { BrowserTopBarProps } from './Types';
 

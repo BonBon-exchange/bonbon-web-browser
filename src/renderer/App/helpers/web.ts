@@ -1,6 +1,8 @@
+/* eslint-disable no-template-curly-in-string */
+/* eslint-disable import/prefer-default-export */
+import { searchEngines } from 'constants/settings';
 import { HistoryItem } from '../components/BrowserInputSuggestions/Types';
 
-/* eslint-disable import/prefer-default-export */
 export const isValidHttpUrl = (s: string) => {
   let url;
 
@@ -15,34 +17,21 @@ export const isValidHttpUrl = (s: string) => {
 
 export const makeSearchUrl = async (search: string): Promise<string> => {
   const val = await window.app.config.get('browsing.searchEngine');
+  const customSearchEngine = await window.app.config.get(
+    'browsing.customSearchEngine'
+  );
 
-  const typedVal = val as string | undefined;
-  switch (typedVal) {
-    case 'google':
-    default:
-      return `https://www.google.com/search?q=${search}`;
+  const typedVal = val as keyof typeof searchEngines | undefined;
+  const typedCSE = customSearchEngine as string | undefined;
+  const searchUrl = typedVal
+    ? searchEngines[typedVal] || searchEngines.Google
+    : searchEngines.Google;
 
-    case 'presearch':
-      return `https://presearch.com/search?q=${search}`;
-
-    case 'qwant':
-      return `https://www.qwant.com/?l=fr&q=${search}&t=web`;
-
-    case 'duckduckgo':
-      return `https://duckduckgo.com/?q=${search}`;
-
-    case 'yandex':
-      return `https://yandex.com/search/?text=${search}`;
-
-    case 'swisscows':
-      return `https://swisscows.com/web?query=${search}`;
-
-    case 'ecosia':
-      return `https://www.ecosia.org/search?method=index&q=${search}`;
-
-    case 'startpage':
-      return `https://www.startpage.com/do/search?query=${search}`;
+  if (typedVal && typedVal === 'Custom' && typedCSE) {
+    return typedCSE.replace('${search}', search);
   }
+
+  return searchUrl.replace('${search}', search);
 };
 
 export const getDomainsFromHistory = (items: HistoryItem[]) => {

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable import/prefer-default-export */
-import loadingImg from 'renderer/App/svg/loading.svg';
+import loadingImg from 'renderer/App/images/loading.svg';
 
 import './style.scss';
 

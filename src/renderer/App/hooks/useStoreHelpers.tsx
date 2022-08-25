@@ -37,7 +37,12 @@ export const useStoreHelpers = (helpersParams?: { boardId?: string }) => {
   const boardContainer = document.getElementById('#Board__container');
 
   const makeBrowser = useCallback(
-    async (params: { url?: string; top?: number; left?: number }) => {
+    async (params: {
+      url?: string;
+      top?: number;
+      left?: number;
+      browserIndex?: number;
+    }): Promise<BrowserProps> => {
       const browserId = v4();
       const defaultWebpage = (await window.app.config.get(
         'browsing.defaultWebpage'
@@ -94,6 +99,16 @@ export const useStoreHelpers = (helpersParams?: { boardId?: string }) => {
         width
       );
 
+      let { browserIndex } = params;
+      if (!browserIndex) {
+        if (params.url) {
+          const activeBoardPosition = board.browsers.findIndex(
+            (b) => b.id === board.activeBrowser
+          );
+          browserIndex = activeBoardPosition + 1;
+        }
+      }
+
       const newBrowser = {
         id: browserId,
         url: params.url || defaultWebpage,
@@ -104,24 +119,11 @@ export const useStoreHelpers = (helpersParams?: { boardId?: string }) => {
         firstRendering: true,
         isLoading: true,
         isMinimized: false,
+        browserIndex,
       };
       return newBrowser;
     },
     [board, boardContainer]
-  );
-
-  const makeAndAddBrowser = useCallback(
-    async (params: { url?: string }): Promise<void> => {
-      if (board) {
-        const newBrowser = await makeBrowser(params);
-        dispatch(addBrowser(newBrowser));
-        setTimeout(() => {
-          focus(newBrowser.id);
-          focusUrlBar(newBrowser.id);
-        }, 300);
-      }
-    },
-    [board, dispatch, makeBrowser, focus, focusUrlBar]
   );
 
   const createBoard = useCallback(
@@ -180,13 +182,6 @@ export const useStoreHelpers = (helpersParams?: { boardId?: string }) => {
   const closeBoard = useCallback(() => {
     window.app.board.close();
   }, []);
-
-  const reopenLastClosed = useCallback(() => {
-    if (board.closedUrls.length > 0) {
-      makeAndAddBrowser({ url: board.closedUrls[board.closedUrls.length - 1] });
-      dispatch(removeLastClosedUrl());
-    }
-  }, [board.closedUrls, dispatch, makeAndAddBrowser]);
 
   const togSearch = useCallback(
     (browserId: string) => {
@@ -356,6 +351,28 @@ export const useStoreHelpers = (helpersParams?: { boardId?: string }) => {
         .catch(console.log);
     }
   };
+
+  const makeAndAddBrowser = useCallback(
+    async (params: { url?: string }): Promise<void> => {
+      if (board) {
+        const newBrowser = await makeBrowser(params);
+
+        dispatch(addBrowser(newBrowser));
+        setTimeout(() => {
+          focus(newBrowser.id);
+          focusUrlBar(newBrowser.id);
+        }, 300);
+      }
+    },
+    [board, dispatch, makeBrowser, focus, focusUrlBar]
+  );
+
+  const reopenLastClosed = useCallback(() => {
+    if (board.closedUrls.length > 0) {
+      makeAndAddBrowser({ url: board.closedUrls[board.closedUrls.length - 1] });
+      dispatch(removeLastClosedUrl());
+    }
+  }, [board.closedUrls, dispatch, makeAndAddBrowser]);
 
   return {
     browser: {

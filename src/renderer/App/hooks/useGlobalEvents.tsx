@@ -12,6 +12,7 @@ import {
   renameBoard,
   updateBrowserCertificateErrorFingerprint,
   setBoardHeight,
+  updateBrowser,
 } from 'renderer/App/store/reducers/Board';
 import { setDownloadItem } from 'renderer/App/store/reducers/Downloads';
 import { useAppDispatch } from 'renderer/App/store/hooks';
@@ -242,6 +243,33 @@ export const useGlobalEvents = () => {
     },
     [boardState.browsers]
   );
+
+  const permissionRequestAction = useCallback(
+    (
+      _e: IpcRendererEvent,
+      args: { url: string; permission: string; webContentsId: number }
+    ) => {
+      const browserId = boardState.browsers.find(
+        (b) => b.webContentsId === args.webContentsId
+      )?.id;
+      if (browserId) {
+        dispatch(
+          updateBrowser({
+            browserId,
+            params: {
+              permissionRequest: { url: args.url, permission: args.permission },
+            },
+          })
+        );
+      }
+    },
+    [boardState.browsers, dispatch]
+  );
+
+  useEffect(() => {
+    window.app.listener.permissionRequest(permissionRequestAction);
+    return () => window.app.off.permissionRequest();
+  }, [permissionRequestAction]);
 
   useEffect(() => {
     window.app.listener.setDefaultWindowSize(setDefaultWindowSizeAction);

@@ -1,3 +1,4 @@
+/* eslint-disable no-template-curly-in-string */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
@@ -5,6 +6,8 @@
 /* eslint-disable import/prefer-default-export */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { searchEngines } from 'constants/settings';
 
 import './style.scss';
 
@@ -16,6 +19,11 @@ export const BrowsingSettings: React.FC = () => {
   const [
     browsingSettingDefaultSearchEngine,
     setBrowsingSettingDefaultSearchEngine,
+  ] = useState<string | undefined>('');
+
+  const [
+    browsingSettingCustomSearchEngine,
+    setBrowsingSettingCustomSearchEngine,
   ] = useState<string | undefined>('');
 
   const [browsingSettingDefaultWidth, setBrowsingSettingDefaultWidth] =
@@ -35,17 +43,6 @@ export const BrowsingSettings: React.FC = () => {
     string | undefined
   >();
 
-  const searchEngines = [
-    'Google',
-    'Presearch',
-    'Qwant',
-    'DuckDuckGo',
-    'Yandex',
-    'Swisscows',
-    'Ecosia',
-    'StartPage',
-  ];
-
   const updateBrowsingSettingWebpage = (value: string) => {
     setBrowsingSettingDefaultWebpage(value);
     window.app.config.set({
@@ -58,6 +55,14 @@ export const BrowsingSettings: React.FC = () => {
     setBrowsingSettingDefaultSearchEngine(value);
     window.app.config.set({
       key: 'browsing.searchEngine',
+      value,
+    });
+  };
+
+  const updateBrowsingSettingCustomSearchEngine = (value: string) => {
+    setBrowsingSettingCustomSearchEngine(value);
+    window.app.config.set({
+      key: 'browsing.customSearchEngine',
       value,
     });
   };
@@ -113,6 +118,13 @@ export const BrowsingSettings: React.FC = () => {
       setBrowsingSettingDefaultSearchEngine(typedVal);
     });
 
+    window.app.config
+      .get('browsing.customSearchEngine')
+      .then((val: unknown) => {
+        const typedVal = val as string | undefined;
+        setBrowsingSettingCustomSearchEngine(typedVal);
+      });
+
     window.app.config.get('browsing.width').then((val: unknown) => {
       const typedVal = val as number | undefined;
       setBrowsingSettingDefaultWidth(typedVal);
@@ -167,20 +179,36 @@ export const BrowsingSettings: React.FC = () => {
           onChange={(e) => updateBrowsingSettingSearchEngine(e.target.value)}
           value={browsingSettingDefaultSearchEngine}
         >
-          {searchEngines.map((se) => {
+          {Object.keys(searchEngines).map((se) => {
             return (
-              <option
-                value={se.toLocaleLowerCase()}
-                key={se.toLocaleLowerCase()}
-              >
+              <option value={se} key={se}>
                 {se}
               </option>
             );
           })}
         </select>
+        {browsingSettingDefaultSearchEngine === 'Custom' && (
+          <div className="Settings_item-additional-row">
+            <label htmlFor="browsing-settings-custom-search-engine">
+              {t('Custom search engine')}:
+            </label>
+            <input
+              type="text"
+              id="browsing-settings-custom-search-engine"
+              value={browsingSettingCustomSearchEngine}
+              onChange={(e) =>
+                updateBrowsingSettingCustomSearchEngine(e.target.value)
+              }
+            />
+          </div>
+        )}
         <div className="Settings__item-description">
           {t(
             'The search engine that will be used when entering text in the url input and pressing enter.'
+          )}
+          <br />
+          {t(
+            'To use a custom search engine, select Custom in the list and enter an url of the type https://www.google.com/search?q=${search}.'
           )}
         </div>
       </div>

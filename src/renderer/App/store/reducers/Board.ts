@@ -134,7 +134,15 @@ export const boardSlice = createSlice({
       setStateActiveBrowser(state, action.payload);
     },
     addBrowser: (state, action: PayloadAction<BrowserProps>) => {
-      state.board.browsers.push(action.payload);
+      if (action.payload.browserIndex) {
+        state.board.browsers.splice(
+          action.payload.browserIndex,
+          0,
+          action.payload
+        );
+      } else {
+        state.board.browsers.push(action.payload);
+      }
       setStateActiveBrowser(state, action.payload.id);
       window.app.analytics.event('add_browser');
     },
@@ -230,12 +238,6 @@ export const boardSlice = createSlice({
       // clean activeBrowser
       if (state.board.activeBrowser === action.payload) {
         if (state.board.browsers.length > 0) {
-          // state.board.browsers[browserIndex]
-          //   ? (state.board.activeBrowser =
-          //       state.board.browsers[browserIndex].id)
-          //   : (state.board.activeBrowser =
-          //       state.board.browsers[browserIndex - 1].id);
-
           setStateActiveBrowser(
             state,
             state.board.browsersActivity[

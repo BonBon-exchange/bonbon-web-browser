@@ -1,0 +1,17 @@
+.PermissionRequest__container {
+  position: absolute;
+  top: 50px;
+  left: 200px;
+  padding: 20px;
+  border-radius: 3px;
+  color: var(--color-text-primary);
+  background-color: var(--color-background-primary);
+
+  .PermissionRequest__callback {
+    margin-top: 20px;
+
+    button {
+      margin-right: 15px;
+    }
+  }
+}

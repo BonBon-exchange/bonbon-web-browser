@@ -8,9 +8,20 @@
   z-index: 10;
   background-color: var(--color-background-tertiary);
 
+  #LeftBar__browserFavContainerItems {
+    max-height: calc(100vh - 50px);
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  #LeftBar__browserFavContainerItems::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+  }
+
   .LeftBar__browserContainer:hover {
 
-    .LeftBar__closeBrowser, 
+    .LeftBar__closeBrowser,
     .LeftBar__maximizeBrowser {
       display: block;
     }
@@ -30,16 +41,20 @@
   .LeftBar__maximizeBrowser {
     position: relative;
     display: none;
-    transform: translate(26px, 11px);
+    transform: translate(22px, 16px);
     color: var(--color-icon-primary);
     margin-top: -19px;
     cursor: pointer;
+  }
+}
 
+.LeftBar__closeBrowser:hover {
+  svg {
+    color: var(--color-red-close);
   }
 }
 
 .LeftBar__closeBrowser {
-
   svg {
     height: 15px;
   }

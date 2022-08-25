@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable import/no-cycle */
 /* eslint-disable promise/catch-or-return */
 /* eslint-disable import/prefer-default-export */
@@ -23,8 +24,10 @@ import {
 } from './extensions';
 import i18n from './i18n';
 import {
+  addPermissionCallback,
   getBrowsers,
   getCertificateErrorAuth,
+  getPermissionCallback,
   makeIpcMainEvents,
 } from './ipcMainEvents';
 import { isValidUrl } from './util';
@@ -213,11 +216,32 @@ app
         session
           .fromPartition('persist:user-partition')
           .setPermissionRequestHandler((webContents, permission, callback) => {
-            const url = webContents.getURL();
-            return url === 'http://localhost:1212/index.html' ||
+            const originalUrl = webContents.getURL();
+            if (
+              originalUrl === 'http://localhost:1212/index.html' ||
               permission === 'fullscreen'
-              ? callback(true)
-              : callback(false);
+            ) {
+              return callback(true);
+            }
+
+            try {
+              const urlInfo = new URL(originalUrl);
+              const url = urlInfo.origin;
+
+              const permCallback = getPermissionCallback(url, permission);
+              if (permCallback) permCallback(true);
+              else {
+                getSelectedView()?.webContents.send('permission-request', {
+                  url,
+                  permission,
+                  webContentsId: webContents.id,
+                });
+
+                addPermissionCallback(url, permission, callback);
+              }
+            } catch (e) {
+              console.log(e);
+            }
           });
 
         const mainWindow = getMainWindow();

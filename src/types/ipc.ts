@@ -64,6 +64,12 @@ export type IpcAddDownload = {
   filename: string;
 };
 
+export type IpcPermissionResponse = {
+  url: string;
+  permission: string;
+  response: boolean;
+};
+
 export type IpcShowTabContextMenu = Position;
 
 export type IpcShowLeftbarContextMenu = Position;
