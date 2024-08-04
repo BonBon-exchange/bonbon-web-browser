@@ -1,0 +1,43 @@
+{
+  "name": "lola",
+  "version": "0.0.0",
+  "description": "A standalone, dependency-free library for context and state management with memory optimization.",
+  "main": "dist/index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "echo 'Error: no test specified' && exit 1",
+    "install": "npm install --cache /tmp/:eruces/.empty-cache",
+    "clean:dist": "rm -rf /Users/danielfebrero/dev/convex-analyser/src-no-space/lola/examples/lolapp/dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/lola.git"
+  },
+  "keywords": [
+    "\"context\"",
+    "\"state\"",
+    "\"memory",
+    "management\"",
+    "\"library\"",
+    "\"dependency-free\""
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/your-username/lola/issues"
+  },
+  "homepage": "https://github.com/your-username/lola#readme",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.5.0"
+  }
+}

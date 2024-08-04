@@ -172,4 +172,12 @@ contextBridge.exposeInMainWorld('titleBar', {
   os: {
     getPlatform: () => process.platform,
   },
+  chat: {
+    init: () => {
+      ipcRenderer.send('init-chat');
+    },
+    end: () => {
+      ipcRenderer.send('end-chat');
+    },
+  },
 });

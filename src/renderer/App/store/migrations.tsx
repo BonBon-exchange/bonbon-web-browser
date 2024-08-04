@@ -4,5 +4,5 @@ export const migrations = {
   3: (state: any) => ({
     ...state,
     board: { ...state.board, browsersActivity: [] },
-  }),
+  })
 };

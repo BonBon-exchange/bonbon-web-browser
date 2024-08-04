@@ -3,6 +3,7 @@ import { TFunction } from 'react-i18next';
 
 import { EventParams } from 'types/analytics';
 import { Bookmark, Provider, Tag } from 'types/bookmarks';
+import { ChatRunner, ChatState, ChatView } from 'types/chat';
 import { Download } from 'types/downloads';
 import { Extension } from 'types/extensions';
 import { Locale } from 'types/i18n';
@@ -87,6 +88,35 @@ contextBridge.exposeInMainWorld('app', {
     getUrlToOpen: (): Promise<string | undefined> => {
       return ipcRenderer.invoke('get-url-to-open');
     },
+  },
+  chat: {
+    createdWebrtcParticipant: (webrtcParticipant: string) => {
+      ipcRenderer.send('created-webrtc-participant', webrtcParticipant);
+    },
+    createdWebrtcOffer: (webrtcOffer: string) => {
+      ipcRenderer.send('created-webrtc-offer', webrtcOffer);
+    },
+    setUsername: (username: string) => {
+      ipcRenderer.send('set-chat-username', username);
+    },
+    setMagic: (magic: string) => {
+      ipcRenderer.send('set-chat-magic', magic);
+    },
+    createRunner: (runner: ChatRunner) => {
+      ipcRenderer.invoke('create-chat-runner', runner)
+    },
+    setState: (state: ChatState) => {
+      ipcRenderer.send('set-chat-state', state)
+    },
+    getState: () => {
+      ipcRenderer.invoke('get-chat-state')
+    },
+    setVisibleRunner: (viewName: ChatView) => {
+      ipcRenderer.send('set-visible-runner', viewName)
+    },
+    init: () => {
+      ipcRenderer.send('init-chat')
+    }
   },
   config: {
     get: (key: string): Promise<unknown> =>
@@ -203,6 +233,31 @@ contextBridge.exposeInMainWorld('app', {
     ) => {
       ipcRenderer.on('set-default-window-size', action);
     },
+    initChat: (
+      action: (event: IpcRendererEvent, ...args: unknown[]) => void
+    ) => {
+      ipcRenderer.on('init-chat', action);
+    },
+    endChat: (
+      action: (event: IpcRendererEvent, ...args: unknown[]) => void
+    ) => {
+      ipcRenderer.on('end-chat', action);
+    },
+    chatMessageReceived: (action: (event: IpcRendererEvent, ...args: unknown[]) => void) => {
+      ipcRenderer.on('chat-message-received', action);
+    },
+    createWebrtcOffer: (action: (event: IpcRendererEvent, ...args: unknown[]) => void) => {
+      ipcRenderer.on('create-webrtc-offer', action);
+    },
+    createWebrtcParticipant: (action: (event: IpcRendererEvent, ...args: unknown[]) => void) => {
+      ipcRenderer.on('create-webrtc-participant', action);
+    },
+    webrtcConnectionRequest: (action: (event: IpcRendererEvent, ...args: unknown[]) => void) => {
+      ipcRenderer.on('wehrtc-connection-request', action);
+    },
+    chatState: (action: (event: IpcRendererEvent, ...args: unknown[]) => void) => {
+      ipcRenderer.on('chat-state', action);
+    }
   },
   off: {
     newWindow: () => {
@@ -244,6 +299,30 @@ contextBridge.exposeInMainWorld('app', {
     setDefaultWindowSize: () => {
       ipcRenderer.removeAllListeners('set-default-window-size');
     },
+    initChat: (
+    ) => {
+      ipcRenderer.removeAllListeners('init-chat');
+    },
+    endChat: (
+    ) => {
+      ipcRenderer.removeAllListeners('end-chat');
+    },
+    chatMessageReceived: (
+    ) => {
+      ipcRenderer.removeAllListeners('chat-message-received');
+    },
+    createWebrtcOffer: () => {
+      ipcRenderer.removeAllListeners('create-webrtc-offer');
+    },
+    createWebrtcParticipant: () => {
+      ipcRenderer.removeAllListeners('create-webrtc-participant');
+    },
+    webrtcConnectionRequest: () => {
+      ipcRenderer.removeAllListeners('wehrtc-connection-request');
+    },
+    chatState: () => {
+      ipcRenderer.removeAllListeners('chat-state');
+    }
   },
   tools: {
     inspectElement: (point: IpcInspectElement) => {

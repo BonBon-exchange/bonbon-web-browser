@@ -3,16 +3,18 @@ import electron, { BrowserView, BrowserWindow, app } from 'electron';
 import path from 'path';
 import { machineIdSync } from 'node-machine-id';
 
+import { BrowserWindowType } from 'types/bonbonized';
 import { getExtensionsObject, installDevtoolsExtensions } from './extensions';
 import { resolveHtmlPath } from './util';
 import { event } from './analytics';
 import { DARWIN } from './constants';
+import { getState } from './BonBon_Global_State';
 
 const machineId = machineIdSync();
 
 let selectedView: BrowserView | null = null;
 let freeView: BrowserView | null = null;
-let mainWindow: BrowserWindow | null = null;
+let mainWindow: BrowserWindowType | null = null;
 
 export const getSelectedView = (): BrowserView | null => selectedView;
 export const getFreeView = (): BrowserView | null => freeView;
@@ -23,7 +25,7 @@ export const setSelectedView = (view: BrowserView): void => {
   selectedView = view;
 };
 
-export const getMainWindow = (): BrowserWindow | null => mainWindow;
+export const getMainWindow = (): BrowserWindowType | null => mainWindow;
 
 export const setBrowserViewBonds = (
   view: BrowserView,
@@ -86,7 +88,7 @@ export const createBrowserView = (): BrowserView => {
   return view;
 };
 
-export const createWindow = async (): Promise<BrowserWindow> => {
+export const createWindow = async (): Promise<BrowserWindowType> => {
   if (!app.isPackaged) {
     await installDevtoolsExtensions();
   }
@@ -115,7 +117,7 @@ export const createWindow = async (): Promise<BrowserWindow> => {
         ? path.join(__dirname, 'titleBarPreload.js')
         : path.join(__dirname, '../../.erb/dll/titleBar.preload.js'),
     },
-  });
+  }) as BrowserWindowType;
 
   mainWindow.setMenu(null);
 
@@ -130,7 +132,10 @@ export const createWindow = async (): Promise<BrowserWindow> => {
   });
 
   mainWindow.webContents.executeJavaScript(
-    `localStorage.setItem("machineId", "${machineId}"); localStorage.setItem("appIsPackaged", "${app.isPackaged}");`,
+    `localStorage.setItem("machineId", "${machineId}"); \
+    localStorage.setItem("appIsPackaged", "${app.isPackaged}"); \
+    localStorage.setItem("chatState", "${JSON.stringify(getState('chat'))}"); \
+    localStorage.setItem("isChatActive", "${getState('isChatActive')}");`,
     true
   );
 

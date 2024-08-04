@@ -1,0 +1,11 @@
+version: '3'
+services:
+  ext4mounter:
+    image: ubuntu:latest
+    privileged: true
+    volumes:
+      - ./loopback.img:/mnt/loopback.img
+      - ./mountpoint:/mnt/mountpoint
+    devices:
+      - /dev/loop0:/dev/loop0
+    command: /bin/bash

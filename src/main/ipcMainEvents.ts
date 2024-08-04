@@ -37,6 +37,7 @@ import {
   IpcTabSelect,
 } from 'types/ipc';
 import { DomainSuggestion } from 'types/suggestions';
+import { ChatRunner } from 'types/chat';
 
 import { event, page } from './analytics';
 import { getUrlToOpen, setUrlToOpen } from './appEvents';
@@ -82,6 +83,8 @@ import {
 import i18n from './i18n';
 import { getStore } from './store';
 import { purgeTab, renameTab, saveTab, selectTab } from './tabs';
+import { getState, setState, setStateAt } from './BonBon_Global_State';
+import { endChat, initChat, setUsername, setMagic, createRunner } from './chat';
 
 const store = getStore();
 let views: Record<string, BrowserView> = {};
@@ -108,6 +111,14 @@ export const getCertificateErrorAuth = (
 const bonbonAutoLauncher = new AutoLaunch({
   name: 'BonBon',
 });
+
+const sendChatStateUpdate = () => {
+  const chatState = getState("chat") ?? {}
+  console.log('sendChatSTtateUpdate', { chatState })
+  Object.keys(getViews()).forEach((browserId) => {
+    getViews()[browserId].webContents.send('chat-state', { chatState });
+  })
+}
 
 export const makeIpcMainEvents = (): void => {
   const extensions = getExtensionsObject();
@@ -450,4 +461,58 @@ export const makeIpcMainEvents = (): void => {
   ipcMain.handle('is-app-maximized', () => {
     return getMainWindow()?.isMaximized() || false;
   });
+
+  // handle chat
+  ipcMain.on('init-chat', () => {
+    if (getState('isChatActive') === true) {
+      setState('isChatActive', false)
+      setState('chat', { username: "", isMagic: false })
+      endChat()
+      getSelectedView()?.webContents.send('end-chat');
+      getSelectedView()?.webContents.send('chat-state', { chatState: {username: '', isMagic: false} });
+    } else {
+      setState('isChatActive', true)
+      initChat()
+      getSelectedView()?.webContents.send('init-chat');
+      getSelectedView()?.webContents.send('chat-state', { chatState: getState("chat") ?? {username: '', isMagic: false} });
+    }
+  });
+
+  ipcMain.on('end-chat', () => {
+    setState('isChatActive', false)
+    setState('chat', {})
+    endChat()
+    getSelectedView()?.webContents.send('end-chat');
+  });
+
+  ipcMain.on('set-chat-username', (_e, usr: string) => {
+    setUsername(usr)
+    const chat = getState("chat") ?? {}
+    chat.username = usr
+    setState("chat", chat)
+  })
+
+  ipcMain.on('set-chat-magic', (_e, magic: string) => {
+    setMagic(magic)
+    const chat = getState("chat") ?? {}
+    chat.isMagic = true
+    setState("chat", chat)
+  })
+
+  ipcMain.handle('create-chat-runner', async (_e, runner: ChatRunner) => {
+    const [chatRunnerId, _chatRunner] = await createRunner(runner)
+    sendChatStateUpdate()
+    return chatRunnerId
+  })
+
+  ipcMain.on('set-visible-runner', (_e, runnerId: string) => {
+    setStateAt('chat.visibleRunner', runnerId)
+    sendChatStateUpdate()
+  })
+
+  ipcMain.handle('get-chat-state', (_e) => {
+    return getState('chat')
+  })
 };
+
+

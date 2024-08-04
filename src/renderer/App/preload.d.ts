@@ -1,6 +1,7 @@
 import { TFunction } from "react-i18next";
 import { EventParams } from "types/analytics";
 import { Bookmark, Provider, Tag } from "types/bookmarks";
+import { ChatRunner, ChatRunnerId, ChatState, ChatView } from "types/chat";
 import { Download } from "types/downloads";
 import { Extension } from "types/extensions";
 import { History } from "types/history";
@@ -49,6 +50,17 @@ declare global {
         requestCapture: (webContentsId: number) => Promise<string>;
         getUrlToOpen: () => Promise<string | undefined>;
       };
+      chat: {
+        createdWebrtcParticipant: (webrtcParticipant: string) => void
+        createdWebrtcOffer: (webrtcOffer: string) => void
+        setUsername: (username: string) => void
+        setMagic: (magic: string) => void
+        createRunner: (runner: ChatRunner) => Promise<ChatRunnerId>
+        setState: (state: ChatState) => void
+        getState: () => Primise<ChatState>
+        setVisibleRunner: ((runner: string) => void)
+        init: () => void
+      };
       config: {
         get: (key: string) => Promise<unknown>;
         set: (args: IpcSetStoreValue) => Promise<void>;
@@ -89,6 +101,13 @@ declare global {
         showDownloadsPreview: (action: unknown) => void;
         distributeWindowsEvenly: (action: unknown) => void;
         setDefaultWindowSize: (action: unknown) => void;
+        initChat: (action: unknown) => void;
+        endChat: (action: unknown) => void;
+        chatMessageReceived: (action: unknown) => void;
+        createWebrtcOffer: (action: unknown) => void;
+        createWebrtcParticipant: (action: unknown) => void;
+        webrtcConnectionRequest: (action: unknown) => void;
+        chatState: (action: unknown) => void;
       };
       off: {
         newWindow: () => void;
@@ -107,6 +126,13 @@ declare global {
         showDownloadsPreview: () => void;
         distributeWindowsEvenly: () => void;
         setDefaultWindowSize: () => void;
+        initChat: () => void;
+        endChat: () => void;
+        chatMessageReceived: () => void;
+        createWebrtcOffer: () => void;
+        createWebrtcParticipant: () => void;
+        webrtcConnectionRequest: () => void;
+        chatState: () => void;
       };
       tools: {
         inspectElement: (point: IpcInspectElement) => void;
@@ -119,7 +145,7 @@ declare global {
         findInKnownDomains: (input: string) => Promise<DomainSuggestion[]>;
       };
     };
-  }
-}
+  };
+};
 
-export {};
+export { };

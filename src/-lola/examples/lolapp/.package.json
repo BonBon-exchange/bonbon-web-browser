@@ -1,0 +1,39 @@
+{
+  "name": "lola",
+  "version": "1.0.0",
+  "description": "Lola is a powerful context and state management library for modern web applications.",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "jest",
+    "start": "node dist/main.js",
+    "lint": "eslint . --ext .ts,.js",
+    "prepublishOnly": "npm run build",
+    "bootstrap:": "touch /Users/danielfebrero/dev/convex-analyser/src/.lola/{seludom,sepyt}/{ctx.ts,mm.ts,state.ts,lola.ts,utils.ts}"
+  },
+  "author": "Daniel Febrero <febrero.daniel@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "typescript": "^4.4.3",
+    "jest": "^27.0.6",
+    "eslint": "^7.32.0"
+  },
+  "keywords": [
+    "context",
+    "state management",
+    "typescript",
+    "web development",
+    "lola"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/lola.git"
+  },
+  "homepage": "https://github.com/yourusername/lola#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/lola/issues"
+  }
+}

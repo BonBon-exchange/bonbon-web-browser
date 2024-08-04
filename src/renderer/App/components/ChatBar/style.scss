@@ -1,0 +1,118 @@
+#chat-bar {
+    width: 100%;
+    height: 33px;
+    background: linear-gradient(200.96deg, #c4a320, #a0455e, #5c2370);
+    top: calc(100vh - 33px);
+    position: fixed;
+    z-index: 100;
+    transition: background 400ms ease-out, height 400ms ease-out, top 400ms ease-out;
+}
+
+#chat-bar.message-received {
+    background: linear-gradient(200.96deg, #ffeb75, #f192b2, #a35ac4);
+}
+
+#chat-bar.user-is-close {
+    height: 66px;
+    top: calc(100vh - 66px);
+    background: linear-gradient(200.96deg, #ffeb75, #f192b2, #a35ac4);
+
+    .chat-bar-home-item {
+        display: flex;
+        align-self: center;
+        color: #3c1303;
+        cursor: pointer;
+        font-size: xxx-large;
+        color: #b653a1;
+        opacity: 0.7;
+    }
+
+    .chat-bar-contact-input {
+        color: #ffa0e7;
+        opacity: 1;
+    }
+}
+
+.chat-bar-home-item {
+    display: flex;
+    align-self: center;
+    color: transparent;
+    transition: color 400ms ease-out, opacity 400ms ease-out;
+    font-size: xxx-large;
+}
+
+#chat-bar.magic-effect {
+    background: linear-gradient(200.96deg, #ff7575, #1eb234, #ffd427);
+}
+
+.chat-bar-register-input,
+.chat-bar-contact-input {
+    background: transparent;
+    height: 44px;
+    margin-top: 8px;
+    border: none;
+    border-bottom: 2px solid #a35ac4;
+    font-size: xxx-large;
+    color: #ffa0e7;
+    transition: color 400ms ease-out;
+    text-align: center;
+}
+
+.chat-bar-register-input {
+    width: 70%;
+    margin-left: 15%;
+}
+
+#chat-bar-set-username.hidden,
+#chat-bar-set-magic.hidden {
+    color: transparent;
+}
+
+#chat-bar-set-username:focus-visible,
+#chat-bar-set-magic:focus-visible {
+    outline: unset;
+}
+
+.chat-bar-register-input::placeholder,
+.chat-bar-contact-input::placeholder {
+    color: #ffa0e7;
+    transition: color 400ms ease-out;
+}
+
+#chat-bar-set-username.hidden::placeholder,
+#chat-bar-set-magic.hidden::placeholder {
+    color: transparent;
+}
+
+#chat-bar-home {
+    display: flex;
+    justify-content: space-evenly;
+    height: 100%;
+}
+
+.chat-bar-contact-input {
+    background: transparent;
+    height: 44px;
+    margin-top: 8px;
+    border: none;
+    width: 30%;
+    border-bottom: 2px solid #a35ac4;
+    font-size: xxx-large;
+    color: transparent;
+    transition: color 400ms ease-out, opacity 400ms ease-in-out;
+    text-align: center;
+    opacity: 0;
+
+    &:focus-visible {
+        outline: unset;   
+    }
+}
+
+#chat-bar-contact {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#chat-view-420 {
+    
+}

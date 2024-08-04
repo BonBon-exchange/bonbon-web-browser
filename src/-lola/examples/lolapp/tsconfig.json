@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+  "./**/*.ts",
+  "../\":src/.sub/**/*.ts",  // Notice the quotes and escaping special characters
+  "../../seludom/**/*.ts",
+  "../../sepyt/**/*.ts"
+],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

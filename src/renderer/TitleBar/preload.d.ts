@@ -61,9 +61,13 @@ declare global {
       };
       os: {
         getPlatform: () => string;
-      }
+      };
+      chat: {
+        init: () => void;
+        end: () => void;
+      };
     };
-  }
-}
+  };
+};
 
-export {};
+export { };

@@ -30,6 +30,7 @@ import {
 import { AppControls } from 'renderer/TitleBar/components/AppControls';
 
 import './style.scss';
+import Magic from 'renderer/TitleBar/components/Magic/Magic';
 import { DownloadState } from './Types';
 
 export const TopBar = () => {
@@ -342,6 +343,8 @@ export const TopBar = () => {
         macTitleBar: window.titleBar.os.getPlatform() === 'darwin',
       })}
     >
+      {/* {window.titleBar.os.getPlatform() === 'darwin' ? <Magic /> : null} */}
+
       <Reorder.Group
         axis="x"
         values={tabs}

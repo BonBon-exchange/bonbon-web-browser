@@ -1,3 +1,45 @@
+#LeftBar__chatItems {
+  position: fixed;
+  bottom: 33px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  width: 50px;
+  align-items: center;
+  z-index: 10;
+  background-color: var(--color-background-tertiary);
+  padding-bottom: 33px;
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+}
+
+.LeftBar__chatItem{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  background: linear-gradient(200.96deg, #c4a320, #a0455e, #5c2370);
+  color: white;
+}
+
+.LeftBar__chatItemContainer {
+  display: flex;
+  justify-content: center;
+  width: 30px;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: var(--color-background-5);
+  }
+}
+
 #LeftBar__browserFavContainer {
   position: fixed;
   height: 100%;
@@ -7,6 +49,7 @@
   align-items: center;
   z-index: 10;
   background-color: var(--color-background-tertiary);
+  padding-bottom: 33px;
 
   .LeftBar__browserContainer:hover {
 

@@ -10,18 +10,31 @@ import {
 } from './browser';
 
 import { getViews, setViews } from './ipcMainEvents';
+import { getState } from './BonBon_Global_State';
 
 export const selectTab = (args: IpcTabSelect) => {
   const views = getViews();
   const viewToShow: BrowserView = views[args.tabId]
     ? views[args.tabId]
     : createBrowserView();
+
+
   views[args.tabId] = viewToShow;
   setViews(views);
   getMainWindow()?.setTopBrowserView(viewToShow);
+
+  if (getState('isChatActive')) {
+    viewToShow.webContents.send('init-chat');
+    viewToShow.webContents.send('chat-state', { chatState: getState("chat") ?? {} });
+  } else {
+    viewToShow.webContents.send('end-chat');
+  }
+
   viewToShow.webContents.send('load-board', {
     boardId: args.tabId,
   });
+
+
   viewToShow.webContents.on('dom-ready', () => {
     const interval = setInterval(() => {
       try {

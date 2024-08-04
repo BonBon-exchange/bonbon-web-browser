@@ -170,6 +170,7 @@
     "react-window": "^1.8.7",
     "redux-persist": "^6.0.0",
     "request": "^2.88.2",
+    "sqlite": "^5.1.1",
     "unzip-crx-3": "^0.2.0",
     "uuid": "^8.3.2"
   },

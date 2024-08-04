@@ -7,10 +7,12 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalEvents } from 'renderer/App/hooks/useGlobalEvents';
+import useChatEvents from 'renderer/App/hooks/useChatEvents';
 import { useStoreHelpers } from 'renderer/App/hooks/useStoreHelpers';
-import { useAppSelector } from 'renderer/App/store/hooks';
+import { useAppDispatch, useAppSelector } from 'renderer/App/store/hooks';
 import { Loader } from 'renderer/App/components/Loader';
 import { About } from 'renderer/App/components/About';
+import { setChatState } from 'renderer/App/store/reducers/Chat';
 
 import { AddapsProps } from './Types';
 
@@ -33,8 +35,10 @@ const Popup = lazy(() => import('renderer/App/components/Popup'));
 const AppMenu = lazy(() => import('renderer/App/components/AppMenu'));
 const Minimap = lazy(() => import('renderer/App/components/Minimap'));
 
-export const Addaps = ({ boardId }: AddapsProps) => {
+export const Addaps = ({ boardId, chatState }: AddapsProps) => {
   useGlobalEvents();
+  useChatEvents();
+  const dispatch = useAppDispatch()
   const { items } = useAppSelector((state) => state.downloads);
   const { board } = useStoreHelpers({ boardId });
   const [showPopup, setShowPopup] = useState<boolean>(false);
@@ -51,7 +55,7 @@ export const Addaps = ({ boardId }: AddapsProps) => {
   const [popupChildren, setPopupChildren] = useState<React.JSX.Element>();
   const [showMinimap, setShowMinimap] = useState<boolean>(false);
   const { i18n } = useTranslation();
-
+  
   const showAppMenuAction = useCallback(() => {
     setShowAppMenu(!showAppMenu);
     setShowDownloadsPreview(false);
@@ -128,6 +132,10 @@ export const Addaps = ({ boardId }: AddapsProps) => {
         ?.removeEventListener('mouseenter', minimapMouseEnterListener);
   }, []);
 
+  useEffect(() => {
+    if (chatState) dispatch(setChatState(chatState))
+  }, [dispatch, chatState])
+
   return (
     <Suspense fallback={<Loader />}>
       <div
@@ -139,7 +147,7 @@ export const Addaps = ({ boardId }: AddapsProps) => {
         })}
       >
         <div id="Addaps__background" />
-        <LeftBar />
+        <LeftBar/>
         <Board
           boardId={boardId}
           isFullSize={

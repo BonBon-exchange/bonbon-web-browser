@@ -14,6 +14,7 @@ import Nucleus from 'nucleus-analytics';
 
 import './appEvents';
 import './logger';
+import './chat';
 
 const machineId = machineIdSync();
 const appVersion = app.getVersion();
